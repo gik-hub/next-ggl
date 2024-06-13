@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "generate": "graphql-codegen",
     "dev": "next dev",
     "build": "next build",
+    "prestart": "yarn generate",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,6 +16,12 @@
     "@apollo/react-hooks": "^4.0.0",
     "@apollo/server": "^4.10.4",
     "@as-integrations/next": "^3.0.0",
+    "@dnd-kit/core": "^6.1.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@prisma/client": "^5.15.0",
     "@types/node": "20.14.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
@@ -25,6 +33,13 @@
     "next": "14.2.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "typescript": "5.4.5"
+    "sass": "^1.77.5",
+    "typescript": "^5.4.5",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.2.6",
+    "ts-node": "^10.9.2"
   }
 }

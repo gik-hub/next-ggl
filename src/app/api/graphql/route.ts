@@ -1,40 +1,8 @@
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import { ApolloServer } from '@apollo/server';
-import { gql } from 'graphql-tag';
 import { NextRequest } from "next/server";
-
-let book = {
-    name: "The Large Hungarian Sausage",
-    author: "Ben Grunfeld",
-};
-
-const typeDefs = gql`
-  type Book {
-    name: String
-    author: String
-  }
-
-  type Query {
-    book: Book
-  }
-
-  type Mutation {
-    updateBook(name: String!, author: String!): Book
-  }
-`;
-
-const resolvers = {
-    Query: {
-        book: () => book,
-    },
-    Mutation: {
-        updateBook: (root: any, args: { name: string; author: string }) => {
-            book.name = args.name;
-            book.author = args.author;
-            return book;
-        },
-    },
-};
+import resolvers from './resolvers'
+import typeDefs from './schema'
 
 const server = new ApolloServer({
     resolvers,
@@ -48,8 +16,16 @@ const handler = startServerAndCreateNextHandler<NextRequest>(server, {
  * @param req - The NextRequest object representing the incoming request.
  * @returns An object containing the request.
  */
-    context: async (req: NextRequest) => ({ req }),
+    // context: async (req: NextRequest) => ({ req }),
 });
 
-export { handler as GET, handler as POST };
-export default handler;
+// export { handler as GET, handler as POST };
+// export default handler;
+
+export async function GET(request: NextRequest) {
+    return handler(request);
+}
+
+export async function POST(request: NextRequest) {
+    return handler(request);
+}
