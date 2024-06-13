@@ -79,6 +79,13 @@ export const dummyBoards = [
                 "name": "Execution",
                 "position": 2,
                 "tasks": []
+            },
+            {
+                "id": "c4",
+                "board_id": "2",
+                "name": "Execution",
+                "position": 2,
+                "tasks": []
             }
         ]
     }
