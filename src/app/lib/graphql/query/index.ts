@@ -10,10 +10,10 @@ export const getBoardsQuery = gql`
       columns {
         id
         name
-        tasks {
-          id
-          title
-        }
+        # tasks {
+        #   id
+        #   title
+        # }
       }
     }
   }

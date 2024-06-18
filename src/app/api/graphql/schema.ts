@@ -19,7 +19,7 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    createBoard(input: { input: NewBoardInput! }): {data: Board, success: Boolean!}
+    createBoard(input: NewBoardInput! ): Board
     updateBoard(input: UpdateUserInput!): Board
     deleteBoard(id: ID!): String
   }

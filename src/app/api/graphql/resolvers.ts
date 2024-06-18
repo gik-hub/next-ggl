@@ -26,7 +26,7 @@ const resolvers = {
         }
     },
     Mutation: {
-        createBoard: (_: any,__: any, { input }: any) => {
+        createBoard: (_: any, { input }: any) => {
             // Return a new board based on input
             return kanban.createBoard(input)
         },

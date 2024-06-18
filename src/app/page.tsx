@@ -36,7 +36,10 @@ export default function Home() {
 
   const handleCreateBoard = () => {
     createBoard({ variables: { name: title } })
+    refetch();
   }
+
+  console.log('data>>>', data)
 
   useEffect(() => {
     setActiveBoard(data?.boards?.[0] || []);
