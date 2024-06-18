@@ -1,4 +1,3 @@
-import { log } from "console";
 import Kanban from "./datasource";
 
 
@@ -10,12 +9,18 @@ const resolvers = {
             // Return a list of dummy boards
             return await kanban.getAllBoards();
         },
-        column: (_: any, { board_id }: { board_id: string }) => {
+
+        board: (_: any, { board_id }: { board_id: any }) => {
             // Return a list of dummy columns filtered by board_id
-            return [
-                { id: "1", name: "Column One", board_id: "1", tasks: [] },
-                { id: "2", name: "Column Two", board_id: "2", tasks: [] }
-            ].filter(column => column.board_id === board_id);
+            console.log('<<<<<<<<<<<<column resolver>>>>>>>>>>>>', board_id)
+
+            return kanban.getBoardById(board_id)
+        },
+        column: (_: any, { board_id }: { board_id: any }) => {
+            // Return a list of dummy columns filtered by board_id
+            console.log('<<<<<<<<<<<<column resolver>>>>>>>>>>>>', board_id)
+
+            return kanban.getColumnByBoardId(board_id)
         },
         task: (_, { column_id }) => {
             // Return a list of dummy tasks filtered by column_id

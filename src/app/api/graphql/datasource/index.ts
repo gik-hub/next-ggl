@@ -29,11 +29,24 @@ export default class Kanban {
         return this.data;
     }
 
+    async getBoardById(input: any) {
+        
+        const data =  this.data.filter(each => parseInt(each.id) === parseInt(input));
+        console.log('getColumnByBoardId input .data', input, data)
+        return data?.[0] || {};
+    }
+
+
+
+    async getColumnByBoardId(input: any) {
+        
+        const data =  this.data.filter(each => parseInt(each.id) === parseInt(input));
+        console.log('getColumnByBoardId input .data', input, data)
+        return data?.[0] || {};
+    }
+
     // Function to create a new board
     async createBoard(input: any) {
-
-        console.log('≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈input>>>>>>>>>>>', input)
-
         try {
             const newBoard = { ...input, id: (this.data.length + 1).toString(), columns: [] };
             this.data.push(newBoard);

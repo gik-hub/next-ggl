@@ -9,7 +9,7 @@ const typeDefs = `#graphql
     name: String!
   }
 
-  input UpdateUserInput {
+  input UpdateBoardInput {
     id: ID!
     name: String
   }
@@ -18,9 +18,13 @@ const typeDefs = `#graphql
     boards: [Board]
   }
 
+  type Query {
+    board(board_id: Int): Board
+  }
+
   type Mutation {
     createBoard(input: NewBoardInput! ): Board
-    updateBoard(input: UpdateUserInput!): Board
+    updateBoard(input: UpdateBoardInput!): Board
     deleteBoard(id: ID!): String
   }
 
@@ -29,7 +33,7 @@ const typeDefs = `#graphql
   type Column {
     id: ID!
     name: String!
-    board_id: String!
+    board_id: String
     tasks: [Task]
   }
 

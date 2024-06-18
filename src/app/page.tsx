@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-// import { useQuery, useMutation } from '@apollo/react-hooks';
 import { useQuery, useMutation } from '@apollo/client';
 
 // import { getBoardsQuery, getTodosQuery } from "@/app/lib/graphql/query";
@@ -23,6 +22,7 @@ import {
   createBoardMutation,
   updateBoardMutation,
 } from './lib/graphql/mutation';
+import BoardColumns from './components/BoardColumns';
 
 export default function Home() {
   const { loading, error, data, refetch } = useQuery(getBoardsQuery);
@@ -35,11 +35,11 @@ export default function Home() {
   const [updateTodo, { data: dataUpdate }] = useMutation(updateBoardMutation);
 
   const handleCreateBoard = () => {
-    createBoard({ variables: { name: title } })
+    createBoard({ variables: { name: title } });
     refetch();
-  }
+  };
 
-  console.log('data>>>', data)
+  console.log('data>>>', data);
 
   useEffect(() => {
     setActiveBoard(data?.boards?.[0] || []);
@@ -91,47 +91,7 @@ export default function Home() {
       </Paper>
       <Paper className={styles.right}>
         <Typography variant='h5'>{activeBoard?.name || ''}</Typography>
-        <Stack direction={'row'} spacing={2} alignItems={'flex-start'} mt={2}>
-          {activeBoard?.columns?.map((column) => (
-            <KanbanColumn key={column?.state} column={column} />
-          ))}
-          <Stack width={'20%'}>
-            <AddComponent btnLabel={'Add column'} />
-          </Stack>
-        </Stack>
-        {loading ? (
-          'loading'
-        ) : (
-          <div>
-            {data?.todos?.map((todo) => (
-              <>
-                <Paper elevation={2} key={todo.id} className={styles.item}>
-                  <div className={styles.title}>
-                    <Typography>{todo.title}</Typography>
-                    <div>
-                      <IconButton
-                      // onClick={() =>
-                      //   updateTodo({
-                      //     variables: {
-                      //       updateTodoId: todo.id,
-                      //       done: !todo.done,
-                      //     },
-                      //   })
-                      // }
-                      >
-                        {todo.done ? (
-                          <CheckCircle color='success' />
-                        ) : (
-                          <Dangerous color='warning' />
-                        )}
-                      </IconButton>
-                    </div>
-                  </div>
-                </Paper>
-              </>
-            ))}
-          </div>
-        )}
+        <BoardColumns board={activeBoard} />
       </Paper>
     </div>
   );

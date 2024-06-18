@@ -13,9 +13,11 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { AddComment, MoreHoriz } from '@mui/icons-material';
+import { MoreHoriz } from '@mui/icons-material';
 import AddComponent from './add-component';
 import TaskCard from './task-card';
+import { useQuery, useMutation } from '@apollo/client';
+import { getColumnByBoardIdQuery } from '../lib/graphql/query';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -25,7 +27,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function KanbanColumn({ column }) {
+export default function KanbanColumn({ board, column }) {
+  // const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
+
+  console.log('my >>>>>>>> column', column)
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

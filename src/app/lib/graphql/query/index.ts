@@ -1,4 +1,5 @@
 // Queries for GraphQL client
+import { AnyCnameRecord } from 'dns';
 import gql from 'graphql-tag';
 
 
@@ -10,28 +11,70 @@ export const getBoardsQuery = gql`
       columns {
         id
         name
-        # tasks {
-        #   id
-        #   title
-        # }
+        tasks {
+          id
+          title
+        }
       }
     }
   }
 `;
 
-export const getColumnByBoardIdQuery = (board_id: string) => gql`
+export const getBoardByIdQuery = (board_id: any) => {
+
+  console.log('board_id&&***************', board_id)
+
+  return gql`
+  query GetBoardByBoardId {
+    board(board_id: ${board_id}) {
+      id
+      name
+      columns {
+        id
+        name
+        tasks {
+        id
+        title
+      }
+      }
+    }
+  }
+`
+};
+
+export const getColumnByBoardIdQuery = (board_id: any) => {
+
+  return gql`
   query GetColumnByBoardId {
-    column(board_id: "${board_id}") {
+    column(board_id: ${board_id}) {
       id
       name
       board_id
       tasks {
         id
-        name
+        title
       }
     }
   }
-`;
+`
+};
+
+// export const getBoardByIdQuery = (board_id: any) => {
+
+//   return gql`
+//   query GetColumnByBoardId {
+//     column(board_id: ${board_id}) {
+//       id
+//       name
+//       board_id
+//       tasks {
+//         id
+//         title
+//       }
+//     }
+//   }
+// `
+// };
 
 export const getTasksByColumnIdQuery = (column_id: string) => gql`
   query GetTasksByColumnId {
