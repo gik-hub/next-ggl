@@ -56,11 +56,12 @@ export const deleteColumnMutation = gql`
 `;
 
 export const createTaskMutation = gql`
-  mutation CreateTask($name: String!, $column_id: ID!) {
-    createTask(input: { name: $name, column_id: $column_id }) {
+  mutation CreateTask($title: String!, $column_id: String!,  $board_id: String!) {
+    createTask(input: { title: $title, column_id: $column_id, board_id: $board_id }) {
       id
-      name
+      title
       column_id
+      board_id
     }
   }
 `;

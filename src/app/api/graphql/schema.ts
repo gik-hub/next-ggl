@@ -70,11 +70,13 @@ type Task {
     id: ID!
     title: String!
     column_id: String!
+    board_id: String
   }
 
   input NewTaskInput {
     title: String!
     column_id: String!
+    board_id: String!
   }
 
   input UpdateTaskInput {

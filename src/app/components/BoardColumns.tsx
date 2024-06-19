@@ -3,12 +3,8 @@ import React from 'react';
 import AddComponent from './add-component';
 import KanbanColumn from './kanban-column';
 import { useQuery, useMutation } from '@apollo/client';
-import {
-  getBoardByIdQuery,
-  getColumnByBoardIdQuery,
-} from '../lib/graphql/query';
+import { getBoardByIdQuery } from '../lib/graphql/query';
 import { createColumnMutation } from '../lib/graphql/mutation';
-import { FieldValue } from 'react-hook-form';
 
 function BoardColumns({ board }) {
   //   const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
@@ -36,7 +32,7 @@ function BoardColumns({ board }) {
       ))}
       {selectedBoard?.columns?.length < 5 && (
         <Stack width={'20%'}>
-          <AddComponent btnLabel={'Add column'} onAdd={handleCreateColumn}  />
+          <AddComponent btnLabel={'Add column'} onAdd={handleCreateColumn} />
         </Stack>
       )}
     </Stack>

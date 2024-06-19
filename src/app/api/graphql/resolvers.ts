@@ -55,7 +55,7 @@ const resolvers = {
         },
         createTask: (_, { input }) => {
             // Return a new task based on input
-            return { id: "3", name: input.name, column_id: input.column_id };
+            return kanban.createTask(input);
         },
         updateTask: (_, { input }) => {
             // Return an updated task based on input

@@ -115,12 +115,46 @@ export default class Kanban {
         }
     }
 
-    private async saveData() {
+    async createTask(input: any) {
         try {
-            console.log('this?.data', this?.data)
-            this.data = []
+            const { title, board_id, column_id } = input;
+            const boardToUpdate = await this.getBoardById(board_id)
+            let updatedTask = null;
+
+            const columnUpdate = boardToUpdate.columns.map((column: any) => {
+                if (column.id === column_id) {
+                    updatedTask = {
+                        id: `${column?.tasks.length + 1}`,
+                        title,
+                        column_id
+                    }
+                    return {
+                        ...column,
+                        tasks: [
+                            ...column?.tasks,
+                            {
+                                id: `${column?.tasks.length + 1}`,
+                                title,
+                                column_id
+                            }
+                        ]
+                    }
+
+                }
+                return column;
+            });
+
+            const updatedBoard = { ...boardToUpdate, columns: columnUpdate };
+            const updatedData = this.data.map((board: any) => {
+                if (board.id === updatedBoard.id) {
+                    return updatedBoard;
+                }
+                return board;
+            });
+            this.data = updatedData;
+            return updatedTask;
         } catch (error) {
-            throw new Error("Failed to save data");
+            throw new Error("Failed to create task");
         }
     }
 
