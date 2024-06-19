@@ -39,8 +39,6 @@ export default function Home() {
     refetch();
   };
 
-  console.log('data>>>', data);
-
   useEffect(() => {
     setActiveBoard(data?.boards?.[0] || []);
   }, [data?.boards]);

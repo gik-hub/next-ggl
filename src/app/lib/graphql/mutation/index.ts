@@ -50,8 +50,8 @@ export const updateColumnMutation = gql`
 `;
 
 export const deleteColumnMutation = gql`
-  mutation DeleteColumn($id: ID!) {
-    deleteColumn(id: $id)
+  mutation DeleteColumn($board_id: String!, $column_id: String!) {
+    deleteColumn(input: {board_id: $board_id, column_id: $column_id} )
   }
 `;
 

@@ -49,6 +49,11 @@ const typeDefs = `#graphql
     # tasks: [Task]
   }
 
+  input DeleteColumnInput {
+    column_id: String!
+    board_id: String!
+  }
+
   type Query {
     column(board_id: Int!): [Column]
   }
@@ -56,7 +61,7 @@ const typeDefs = `#graphql
   type Mutation {
     createColumn(input: NewColumnInput!): Column
     updateColumn(input: UpdateColumnInput!): Column
-    deleteColumn(id: ID!): String
+    deleteColumn(input: DeleteColumnInput): String
   }
 
 

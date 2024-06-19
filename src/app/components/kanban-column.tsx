@@ -17,7 +17,11 @@ import { MoreHoriz } from '@mui/icons-material';
 import AddComponent from './add-component';
 import TaskCard from './task-card';
 import { useQuery, useMutation } from '@apollo/client';
-import { getColumnByBoardIdQuery } from '../lib/graphql/query';
+import {
+  getBoardByIdQuery,
+  getColumnByBoardIdQuery,
+} from '../lib/graphql/query';
+import { deleteColumnMutation } from '../lib/graphql/mutation';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -28,6 +32,16 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function KanbanColumn({ board, column }) {
+  const { refetch } = useQuery(getBoardByIdQuery(board.id));
+  const [deleteColumn, { data }] = useMutation(deleteColumnMutation);
+
+  const handleDeleteColumn = async () => {
+    await deleteColumn({
+      variables: { board_id: board?.id, column_id: column?.id },
+    });
+    handleClose();
+    refetch()
+  };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -69,7 +83,7 @@ export default function KanbanColumn({ board, column }) {
         >
           <MenuItem onClick={handleClose}>Rename</MenuItem>
           <MenuItem onClick={handleClose}>Clear</MenuItem>
-          <MenuItem onClick={handleClose}>Delete</MenuItem>
+          <MenuItem onClick={handleDeleteColumn}>Delete</MenuItem>
         </Menu>
       </Stack>
       <Divider />

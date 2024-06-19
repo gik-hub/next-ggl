@@ -31,11 +31,6 @@ const resolvers = {
             // Return a new board based on input
             return kanban.createBoard(input)
         },
-
-        createColumn: (_, { input }) => {
-            // Return a new column based on input
-            return kanban.createColumn(input)
-        },
         updateBoard: (_, { input }) => {
             // Return an updated board based on input
             return { id: input.id, name: input.name || "Default Name" };
@@ -45,13 +40,18 @@ const resolvers = {
             return `Board with id ${id} deleted successfully.`;
         },
 
+        createColumn: (_, { input }) => {
+            // Return a new column based on input
+            return kanban.createColumn(input)
+        },
+
         updateColumn: (_, { input }) => {
             // Return an updated column based on input
             return { id: input.id, name: input.name || "Default Column Name", board_id: input.board_id, tasks: input.tasks || [] };
         },
-        deleteColumn: (_, { id }) => {
+        deleteColumn: (_, { input }) => {
             // Return a success message for deletion
-            return `Column with id ${id} deleted successfully.`;
+            return kanban.deleteColumn(input);
         },
         createTask: (_, { input }) => {
             // Return a new task based on input

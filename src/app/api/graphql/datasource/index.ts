@@ -55,8 +55,28 @@ export default class Kanban {
         }
     }
 
+    async updateBoard(boardId: number, newDetails: any) {
+        try {
+            // Find the index of the board in the array
+            const index = this.data.boards.findIndex((board: any) => board.id === boardId);
+            if (index === -1) {
+                throw new Error("Board not found");
+            }
+
+            // Update the board details at the found index
+            this.data.boards[index] = { ...this.data.boards[index], ...newDetails };
+
+            // Simulate saving the data
+            // await this.saveData();
+
+            // Return the updated board
+            return this.data.boards[index];
+        } catch (error) {
+            throw new Error(`Failed to update board: ${error.message}`);
+        }
+    }
+
     async createColumn(input: any) {
-        console.log('input', input)
         try {
             const { name, board_id } = input;
             const boardToUpdate = await this.getBoardById(board_id)
@@ -76,24 +96,22 @@ export default class Kanban {
         }
     }
 
-    async updateBoard(boardId: number, newDetails: any) {
+    async deleteColumn(input: any) {
         try {
-            // Find the index of the board in the array
-            const index = this.data.boards.findIndex((board: any) => board.id === boardId);
-            if (index === -1) {
-                throw new Error("Board not found");
-            }
-
-            // Update the board details at the found index
-            this.data.boards[index] = { ...this.data.boards[index], ...newDetails };
-
-            // Simulate saving the data
-            // await this.saveData();
-
-            // Return the updated board
-            return this.data.boards[index];
+            const { board_id, column_id } = input;
+            const boardToUpdate = await this.getBoardById(board_id)
+            const columns = boardToUpdate.columns.filter((column: any) => column.id !== column_id);
+            const updatedBoard = { ...boardToUpdate, columns };
+            const updatedData = this.data.map((board: any) => {
+                if (board.id === updatedBoard.id) {
+                    return updatedBoard;
+                }
+                return board;
+            });
+            this.data = updatedData;
+            return `Done! ${column_id} column of ${boardToUpdate?.name} deleted.`;
         } catch (error) {
-            throw new Error(`Failed to update board: ${error.message}`);
+            throw new Error("Failed to create column");
         }
     }
 
