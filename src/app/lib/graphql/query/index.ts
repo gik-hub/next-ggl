@@ -57,23 +57,6 @@ export const getColumnByBoardIdQuery = (board_id: any) => {
 `
 };
 
-// export const getBoardByIdQuery = (board_id: any) => {
-
-//   return gql`
-//   query GetColumnByBoardId {
-//     column(board_id: ${board_id}) {
-//       id
-//       name
-//       board_id
-//       tasks {
-//         id
-//         title
-//       }
-//     }
-//   }
-// `
-// };
-
 export const getTasksByColumnIdQuery = (column_id: string) => gql`
   query GetTasksByColumnId {
     task(column_id: "${column_id}") {

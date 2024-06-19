@@ -17,11 +17,11 @@ import { MoreHoriz } from '@mui/icons-material';
 import AddComponent from './add-component';
 import TaskCard from './task-card';
 import { useQuery, useMutation } from '@apollo/client';
+import { getBoardByIdQuery } from '../lib/graphql/query';
 import {
-  getBoardByIdQuery,
-  getColumnByBoardIdQuery,
-} from '../lib/graphql/query';
-import { createTaskMutation, deleteColumnMutation } from '../lib/graphql/mutation';
+  createTaskMutation,
+  deleteColumnMutation,
+} from '../lib/graphql/mutation';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -49,18 +49,21 @@ export default function KanbanColumn({ board, column }) {
       variables: { board_id: board?.id, column_id: column?.id },
     });
     handleClose();
-    refetch()
+    refetch();
   };
 
-  const [createTask, { data: createdColumn }] =
-  useMutation(createTaskMutation);
+  const [createTask, { data: createdColumn }] = useMutation(createTaskMutation);
 
-const handleCreateTask= async (input: any) => {
-  await createTask({
-    variables: { board_id: board?.id, column_id: column?.id, title: input?.name },
-  });
-  refetch();
-};
+  const handleCreateTask = async (input: any) => {
+    await createTask({
+      variables: {
+        board_id: board?.id,
+        column_id: column?.id,
+        title: input?.name,
+      },
+    });
+    refetch();
+  };
 
   const { isOver, setNodeRef } = useDroppable({
     id: 'droppable',

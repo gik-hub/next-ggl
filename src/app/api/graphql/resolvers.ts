@@ -16,15 +16,12 @@ const resolvers = {
         },
         column: (_: any, { board_id }: { board_id: any }) => {
             // Return a list of dummy columns filtered by board_id
+
+            // Return all columns for a board 
+
+            // return all tasks nested in a column
             return kanban.getColumnByBoardId(board_id)
         },
-        task: (_, { column_id }) => {
-            // Return a list of dummy tasks filtered by column_id
-            return [
-                { id: "1", name: "Task One", column_id: "1" },
-                { id: "2", name: "Task Two", column_id: "2" }
-            ].filter(task => task.column_id === column_id);
-        }
     },
     Mutation: {
         createBoard: (_: any, { input }: any) => {
@@ -47,6 +44,7 @@ const resolvers = {
 
         updateColumn: (_, { input }) => {
             // Return an updated column based on input
+            // TODO: Update column in jSON
             return { id: input.id, name: input.name || "Default Column Name", board_id: input.board_id, tasks: input.tasks || [] };
         },
         deleteColumn: (_, { input }) => {
@@ -59,10 +57,13 @@ const resolvers = {
         },
         updateTask: (_, { input }) => {
             // Return an updated task based on input
+
+            // TODO: update task in jSON
             return { id: input.id, name: input.name || "Default Task Name", column_id: input.column_id };
         },
         deleteTask: (_, { id }) => {
             // Return a success message for deletion
+            // TODO: update in JSON
             return `Task with id ${id} deleted successfully.`;
         }
     }

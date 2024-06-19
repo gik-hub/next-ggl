@@ -12,12 +12,8 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-
-// import { getBoardsQuery, getTodosQuery } from "@/app/lib/graphql/query";
 import styles from './page.module.scss';
 import { getBoardsQuery } from './lib/graphql/query';
-import KanbanColumn from './components/kanban-column';
-import AddComponent from './components/add-component';
 import {
   createBoardMutation,
   updateBoardMutation,
@@ -32,7 +28,6 @@ export default function Home() {
   const [createBoard, { data: createdBoard }] =
     useMutation(createBoardMutation);
 
-  const [updateTodo, { data: dataUpdate }] = useMutation(updateBoardMutation);
 
   const handleCreateBoard = () => {
     createBoard({ variables: { name: title } });

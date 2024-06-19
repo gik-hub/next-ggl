@@ -31,17 +31,18 @@ export default class Kanban {
 
     async getBoardById(input: any) {
 
-        const data = this.data.filter(each => parseInt(each.id) === parseInt(input));
-        return data?.[0] || {};
+        
+        const data = this.data.find(board => board.id === input.toString());
+        console.log('input>>>>>>>>>>>', input,this.data, data)
+        return data || {};
     }
 
 
 
     async getColumnByBoardId(input: any) {
-
-        const data = this.data.filter(each => parseInt(each.id) === parseInt(input));
-        console.log('getColumnByBoardId input .data', input, data)
-        return data?.[0] || {};
+        const board = await this.getBoardById(input)
+        //TODO: return all columns
+        return board['columns'] || [];
     }
 
     // Function to create a new board
@@ -49,6 +50,7 @@ export default class Kanban {
         try {
             const newBoard = { ...input, id: (this.data.length + 1).toString(), columns: [] };
             this.data.push(newBoard);
+            // TODO: add save data
             return { newBoard };
         } catch (error) {
             throw new Error("Failed to create board");
@@ -80,8 +82,12 @@ export default class Kanban {
         try {
             const { name, board_id } = input;
             const boardToUpdate = await this.getBoardById(board_id)
+
             const columnPosition = boardToUpdate?.columns.length + 1
-            const newColumn = { name, id: `c${columnPosition}`, position: columnPosition, board_id, tasks: [] };
+            const newColumn = { name, id: `c${columnPosition}`, board_id, tasks: [] };
+
+            // TODO: refactor to make use of this.saveData()
+
             const updatedBoard = { ...boardToUpdate, columns: [...boardToUpdate?.columns, newColumn] };
             const updatedData = this.data.map((board: any) => {
                 if (board.id === updatedBoard.id) {
@@ -89,6 +95,8 @@ export default class Kanban {
                 }
                 return board;
             });
+
+            //TODO:  below make use of saveData return
             this.data = updatedData;
             return newColumn;
         } catch (error) {
@@ -101,6 +109,7 @@ export default class Kanban {
             const { board_id, column_id } = input;
             const boardToUpdate = await this.getBoardById(board_id)
             const columns = boardToUpdate.columns.filter((column: any) => column.id !== column_id);
+            // Replace below with the saveData(updatedBoard)
             const updatedBoard = { ...boardToUpdate, columns };
             const updatedData = this.data.map((board: any) => {
                 if (board.id === updatedBoard.id) {
@@ -115,36 +124,24 @@ export default class Kanban {
         }
     }
 
+    // TODO: add update column function (update title and tasks clearing here)
+
     async createTask(input: any) {
         try {
             const { title, board_id, column_id } = input;
             const boardToUpdate = await this.getBoardById(board_id)
             let updatedTask = null;
+            // TODO: columnUpdate = find first then update the columns
+            const columnToUpdate = boardToUpdate.columns.find((column) => column.id === column_id)
+            const updatedCol = columnToUpdate?.tasks.push({
+                id: `${columnToUpdate?.tasks.length + 1}`,
+                title,
+                column_id
+            })
 
-            const columnUpdate = boardToUpdate.columns.map((column: any) => {
-                if (column.id === column_id) {
-                    updatedTask = {
-                        id: `${column?.tasks.length + 1}`,
-                        title,
-                        column_id
-                    }
-                    return {
-                        ...column,
-                        tasks: [
-                            ...column?.tasks,
-                            {
-                                id: `${column?.tasks.length + 1}`,
-                                title,
-                                column_id
-                            }
-                        ]
-                    }
+            // TODO: Implement updatedData = saveData  and return its value
 
-                }
-                return column;
-            });
-
-            const updatedBoard = { ...boardToUpdate, columns: columnUpdate };
+            const updatedBoard = { ...boardToUpdate, columns: updatedCol };
             const updatedData = this.data.map((board: any) => {
                 if (board.id === updatedBoard.id) {
                     return updatedBoard;
@@ -156,6 +153,13 @@ export default class Kanban {
         } catch (error) {
             throw new Error("Failed to create task");
         }
+    }
+
+    // TODO: update task, title and column id on DnD
+
+    async saveData () {
+        // save to json file 
+        // return the updated board 
     }
 
 }

@@ -1,4 +1,6 @@
 const typeDefs = `#graphql
+
+# Boards 
   type Board {
     id: ID
     name: String
@@ -14,22 +16,7 @@ const typeDefs = `#graphql
     name: String
   }
 
-  type Query {
-    boards: [Board]
-  }
-
-  type Query {
-    board(board_id: Int): Board
-  }
-
-  type Mutation {
-    createBoard(input: NewBoardInput! ): Board
-    updateBoard(input: UpdateBoardInput!): Board
-    deleteBoard(id: ID!): String
-  }
-
-# COLUMNS 
-
+  # COLUMNS 
   type Column {
     id: ID!
     name: String!
@@ -54,18 +41,7 @@ const typeDefs = `#graphql
     board_id: String!
   }
 
-  type Query {
-    column(board_id: Int!): [Column]
-  }
-
-  type Mutation {
-    createColumn(input: NewColumnInput!): Column
-    updateColumn(input: UpdateColumnInput!): Column
-    deleteColumn(input: DeleteColumnInput): String
-  }
-
-
-# TASK 
+  # TASK 
 type Task {
     id: ID!
     title: String!
@@ -86,10 +62,27 @@ type Task {
   }
 
   type Query {
-    task(column_id: Int!): [Task]
+    # Boards
+    boards: [Board]
+    board(board_id: Int): Board
+
+    # Columns
+    column(board_id: Int!): [Column]
   }
 
+
   type Mutation {
+    # Boards 
+    createBoard(input: NewBoardInput! ): Board
+    updateBoard(input: UpdateBoardInput!): Board
+    deleteBoard(id: ID!): String
+
+    # Column
+    createColumn(input: NewColumnInput!): Column
+    updateColumn(input: UpdateColumnInput!): Column
+    deleteColumn(input: DeleteColumnInput): String
+  
+    # Tasks
     createTask(input: NewTaskInput!): Task
     updateTask(input: UpdateTaskInput!): Task
     deleteTask(id: ID!): String
