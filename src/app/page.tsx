@@ -1,97 +1,96 @@
-import Image from 'next/image'
-import styles from './page.module.css'
-import { BookInfo } from './components'
+'use client';
+
+import { AddCircle, CheckCircle, Dangerous } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+
+// import { getBoardsQuery, getTodosQuery } from "@/app/lib/graphql/query";
+import styles from './page.module.scss';
+import { getBoardsQuery } from './lib/graphql/query';
+import KanbanColumn from './components/kanban-column';
+import AddComponent from './components/add-component';
+import {
+  createBoardMutation,
+  updateBoardMutation,
+} from './lib/graphql/mutation';
+import BoardColumns from './components/BoardColumns';
 
 export default function Home() {
+  const { loading, error, data, refetch } = useQuery(getBoardsQuery);
+  const [title, setTitle] = useState('');
+  const [activeBoard, setActiveBoard] = useState([]);
+
+  const [createBoard, { data: createdBoard }] =
+    useMutation(createBoardMutation);
+
+  const [updateTodo, { data: dataUpdate }] = useMutation(updateBoardMutation);
+
+  const handleCreateBoard = () => {
+    createBoard({ variables: { name: title } });
+    refetch();
+  };
+
+  useEffect(() => {
+    setActiveBoard(data?.boards?.[0] || []);
+  }, [data?.boards]);
+
+  if (error) return <p>Error</p>;
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <BookInfo />
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <div className={styles.container}>
+      <Paper className={styles.left}>
+        <Box width={'100%'}>
+          <Stack spacing={4} width={'100%'}>
+            {data?.boards?.map((board) => (
+              <Typography
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor:
+                    activeBoard?.id === board?.id ? 'aliceblue' : undefined,
+                }}
+                boxShadow={1}
+                p={2}
+                key={board?.id}
+                onClick={() =>
+                  setActiveBoard(
+                    data?.boards?.filter((item) => item?.id === board?.id)[0]
+                  )
+                }
+              >
+                {board?.name}
+              </Typography>
+            ))}
+          </Stack>
+        </Box>
+        <TextField
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          label={'Title'}
+          fullWidth
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+        <div>
+          <Button
+            variant='contained'
+            startIcon={<AddCircle />}
+            onClick={() => handleCreateBoard()}
+          >
+            Add
+          </Button>
+        </div>
+      </Paper>
+      <Paper className={styles.right}>
+        <Typography variant='h5'>{activeBoard?.name || ''}</Typography>
+        <BoardColumns board={activeBoard} />
+      </Paper>
+    </div>
+  );
 }
