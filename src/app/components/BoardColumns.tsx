@@ -3,31 +3,41 @@ import React from 'react';
 import AddComponent from './add-component';
 import KanbanColumn from './kanban-column';
 import { useQuery, useMutation } from '@apollo/client';
-import { getBoardByIdQuery, getColumnByBoardIdQuery } from '../lib/graphql/query';
+import {
+  getBoardByIdQuery,
+  getColumnByBoardIdQuery,
+} from '../lib/graphql/query';
+import { createColumnMutation } from '../lib/graphql/mutation';
 
 function BoardColumns({ board }) {
-//   const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
-  const { loading, error, data } = useQuery(getBoardByIdQuery(board.id));
+  //   const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
+  const { loading, error, data, refetch } = useQuery(
+    getBoardByIdQuery(board.id)
+  );
+  const [createColumn, { data: createdColumn }] =
+    useMutation(createColumnMutation);
 
-  console.log('board>>>>>>>>>', board)
+  const handleCreateColumn = async () => {
+    await createColumn({
+      variables: { board_id: '1', name: 'static add title' },
+    });
+    refetch();
+  };
 
-  console.log('getColumnByBoardIdQuery data', data?.board)
   const columns = data?.columns;
 
-  const selectedBoard =  data?.board;
-
-  console.log('selectedBoard', selectedBoard)
-
-//   debugger
+  const selectedBoard = data?.board;
 
   return (
     <Stack direction={'row'} spacing={2} alignItems={'flex-start'} mt={2}>
       {selectedBoard?.columns?.map((column) => (
         <KanbanColumn key={column?.id} column={column} board={board} />
       ))}
-      <Stack width={'20%'}>
-        <AddComponent btnLabel={'Add column'} />
-      </Stack>
+      {selectedBoard?.columns?.length < 5 && (
+        <Stack width={'20%'}>
+          <AddComponent btnLabel={'Add column'} onAdd={handleCreateColumn} />
+        </Stack>
+      )}
     </Stack>
   );
 }

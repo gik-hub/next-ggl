@@ -28,9 +28,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function KanbanColumn({ board, column }) {
-  // const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
-
-  console.log('my >>>>>>>> column', column)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

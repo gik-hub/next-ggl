@@ -30,17 +30,16 @@ export default class Kanban {
     }
 
     async getBoardById(input: any) {
-        
-        const data =  this.data.filter(each => parseInt(each.id) === parseInt(input));
-        console.log('getColumnByBoardId input .data', input, data)
+
+        const data = this.data.filter(each => parseInt(each.id) === parseInt(input));
         return data?.[0] || {};
     }
 
 
 
     async getColumnByBoardId(input: any) {
-        
-        const data =  this.data.filter(each => parseInt(each.id) === parseInt(input));
+
+        const data = this.data.filter(each => parseInt(each.id) === parseInt(input));
         console.log('getColumnByBoardId input .data', input, data)
         return data?.[0] || {};
     }
@@ -53,6 +52,27 @@ export default class Kanban {
             return { newBoard };
         } catch (error) {
             throw new Error("Failed to create board");
+        }
+    }
+
+    async createColumn(input: any) {
+        console.log('input', input)
+        try {
+            const { name, board_id } = input;
+            const boardToUpdate = await this.getBoardById(board_id)
+            const columnPosition = boardToUpdate?.columns.length + 1
+            const newColumn = { name, id: `c${columnPosition}`, position: columnPosition, board_id, tasks: [] };
+            const updatedBoard = { ...boardToUpdate, columns: [...boardToUpdate?.columns, newColumn] };
+            const updatedData = this.data.map((board: any) => {
+                if (board.id === updatedBoard.id) {
+                    return updatedBoard;
+                }
+                return board;
+            });
+            this.data = updatedData;
+            return newColumn;
+        } catch (error) {
+            throw new Error("Failed to create column");
         }
     }
 

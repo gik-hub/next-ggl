@@ -12,14 +12,10 @@ const resolvers = {
 
         board: (_: any, { board_id }: { board_id: any }) => {
             // Return a list of dummy columns filtered by board_id
-            console.log('<<<<<<<<<<<<column resolver>>>>>>>>>>>>', board_id)
-
             return kanban.getBoardById(board_id)
         },
         column: (_: any, { board_id }: { board_id: any }) => {
             // Return a list of dummy columns filtered by board_id
-            console.log('<<<<<<<<<<<<column resolver>>>>>>>>>>>>', board_id)
-
             return kanban.getColumnByBoardId(board_id)
         },
         task: (_, { column_id }) => {
@@ -35,6 +31,11 @@ const resolvers = {
             // Return a new board based on input
             return kanban.createBoard(input)
         },
+
+        createColumn: (_, { input }) => {
+            // Return a new column based on input
+            return kanban.createColumn(input)
+        },
         updateBoard: (_, { input }) => {
             // Return an updated board based on input
             return { id: input.id, name: input.name || "Default Name" };
@@ -43,10 +44,7 @@ const resolvers = {
             // Return a success message for deletion
             return `Board with id ${id} deleted successfully.`;
         },
-        createColumn: (_, { input }) => {
-            // Return a new column based on input
-            return { id: "3", name: input.name, board_id: input.board_id, tasks: [] };
-        },
+
         updateColumn: (_, { input }) => {
             // Return an updated column based on input
             return { id: input.id, name: input.name || "Default Column Name", board_id: input.board_id, tasks: input.tasks || [] };

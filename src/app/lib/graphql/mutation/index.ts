@@ -30,7 +30,7 @@ export const deleteBoardMutation = gql`
 `;
 
 export const createColumnMutation = gql`
-  mutation CreateColumn($name: String!, $board_id: ID!) {
+  mutation CreateColumn($name: String!, $board_id: String!) {
     createColumn(input: { name: $name, board_id: $board_id }) {
       id
       name
