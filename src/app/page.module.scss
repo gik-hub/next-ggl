@@ -26,12 +26,16 @@
 
     & > div {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      // overflow: scroll;
       gap: 8px;
       margin-top: 16px;
       .item {
         padding: 8px;
         width: calc(
+          25% - 16px - 6px
+        ); // size (25%) - 16px (2 * left/right padding) - 6px (8px [gap size] * 3 [gap number] / 4 [item number in same line])
+        min-width: calc(
           25% - 16px - 6px
         ); // size (25%) - 16px (2 * left/right padding) - 6px (8px [gap size] * 3 [gap number] / 4 [item number in same line])
         .title {

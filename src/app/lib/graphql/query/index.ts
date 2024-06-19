@@ -22,8 +22,6 @@ export const getBoardsQuery = gql`
 
 export const getBoardByIdQuery = (board_id: any) => {
 
-  console.log('board_id&&***************', board_id)
-
   return gql`
   query GetBoardByBoardId {
     board(board_id: ${board_id}) {

@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import React from 'react';
 import AddComponent from './add-component';
 import KanbanColumn from './kanban-column';
@@ -8,6 +8,7 @@ import {
   getColumnByBoardIdQuery,
 } from '../lib/graphql/query';
 import { createColumnMutation } from '../lib/graphql/mutation';
+import { FieldValue } from 'react-hook-form';
 
 function BoardColumns({ board }) {
   //   const { loading, error, data } = useQuery(getColumnByBoardIdQuery(board.id));
@@ -17,9 +18,9 @@ function BoardColumns({ board }) {
   const [createColumn, { data: createdColumn }] =
     useMutation(createColumnMutation);
 
-  const handleCreateColumn = async () => {
+  const handleCreateColumn = async (input: any) => {
     await createColumn({
-      variables: { board_id: '1', name: 'static add title' },
+      variables: { board_id: board?.id, ...input },
     });
     refetch();
   };
@@ -35,7 +36,7 @@ function BoardColumns({ board }) {
       ))}
       {selectedBoard?.columns?.length < 5 && (
         <Stack width={'20%'}>
-          <AddComponent btnLabel={'Add column'} onAdd={handleCreateColumn} />
+          <AddComponent btnLabel={'Add column'} onAdd={handleCreateColumn}  />
         </Stack>
       )}
     </Stack>
