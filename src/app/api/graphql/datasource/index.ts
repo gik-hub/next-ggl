@@ -1,13 +1,14 @@
-import fs from 'fs'
+import fs from 'fs-extra'
 import path from 'path'
-import { dummyBoards } from "./data";
 
+const jsonDirectory = path.join(process.cwd(), 'src/app/api/graphql/datasource');
+const filePath = path.join(jsonDirectory, 'data.json');
 
-const dataPath = path.resolve(__dirname, 'data.json');
 
 export default class Kanban {
     private static instance: Kanban;
     private data: any;
+
 
     private constructor() {
         this.initData();
@@ -20,27 +21,27 @@ export default class Kanban {
         return Kanban.instance;
     }
 
-    private async initData() {
-        try {
-            this.data = dummyBoards;
-        } catch (error) {
-            throw new Error("Failed to load initial data");
-        }
-    }
-
     // private async initData() {
     //     try {
-    //         // This is saved in the .next folder due tot the build process, how to I make it read the relative path and generate one later
-    //         const data = fs.readFileSync(dataPath, 'utf8');
-    //         const parsedData = JSON.parse(data)
-    //         this.data = parsedData['boards'];
+    //         this.data = dummyBoards;
     //     } catch (error) {
-    //         console.error(error
-
-    //         )
     //         throw new Error("Failed to load initial data");
     //     }
     // }
+
+    private async initData() {
+        try {
+            const data = fs.readFileSync(filePath, 'utf8');
+            const parsedData = JSON.parse(data)
+            console.log('parsedData', parsedData)
+            this.data = parsedData['boards'];
+        } catch (error) {
+            console.error(error
+
+            )
+            throw new Error("Failed to load initial data");
+        }
+    }
 
     // Function to fetch all boards
     async getAllBoards() {
@@ -57,7 +58,7 @@ export default class Kanban {
 
     async getColumnByBoardId(input: any) {
         const board = await this.getBoardById(input)
-        //TODO: return all columns
+        //TODO: DONE return all columns
         return board['columns'] || [];
     }
 
@@ -67,8 +68,7 @@ export default class Kanban {
             const newBoard = { ...input, id: (this.data.length + 1).toString(), columns: [] };
             this.data.push(newBoard);
             // TODO: add save data
-            // await this.saveData()
-            return { newBoard };
+            return await this.saveBoardData(newBoard)
         } catch (error) {
             throw new Error("Failed to create board");
         }
@@ -222,17 +222,25 @@ export default class Kanban {
 
     // TODO: update task, title and column id on DnD
 
-    // async saveData () {
-    //     // save to json file 
-    //     // return the updated board 
-    // }
+    async saveData () {
+        // save to json file 
+        // return the updated board 
+    }
 
-    async saveData() {
+    async saveBoardData(data) {
         try {
-            fs.writeFileSync(dataPath, this.data);
-            // return this.data;
+
+            // Update the data based on the provided input (this logic will depend on your requirements)
+            // For example, updating a specific board's name
+
+            // Write the updated data back to the file
+            const savedJson = await fs.writeJson(filePath, { boards: this?.data }, { spaces: 2 });
+
+
+            // Return the updated data
+            // return boards;
         } catch (error) {
-            throw new Error("Failed to save data");
+            throw new Error("Failed to update JSON file");
         }
     }
 }
