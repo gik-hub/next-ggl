@@ -2,7 +2,7 @@ const typeDefs = `#graphql
 
 # Boards 
   type Board {
-    id: ID
+    id: String
     name: String
     columns: [Column]
   }
@@ -30,10 +30,10 @@ const typeDefs = `#graphql
   }
 
   input UpdateColumnInput {
-    id: ID!
+    id: String!
     board_id: String!
     name: String
-    # tasks: [Task]
+    # tasks: [NewTaskInput]
   }
 
   input DeleteColumnInput {
@@ -43,9 +43,9 @@ const typeDefs = `#graphql
 
   # TASK 
 type Task {
-    id: ID!
+    id: String!
     title: String!
-    column_id: String!
+    column_id: String
     board_id: String
   }
 
@@ -64,10 +64,10 @@ type Task {
   type Query {
     # Boards
     boards: [Board]
-    board(board_id: Int): Board
+    board(board_id: String!): Board
 
     # Columns
-    column(board_id: Int!): [Column]
+    column(board_id: String!): [Column]
   }
 
 
@@ -79,11 +79,11 @@ type Task {
 
     # Column
     createColumn(input: NewColumnInput!): Column
-    updateColumn(input: UpdateColumnInput!): Column
+    updateColumn(input: UpdateColumnInput): Column
     deleteColumn(input: DeleteColumnInput): String
   
     # Tasks
-    createTask(input: NewTaskInput!): Task
+    createTask(input: NewTaskInput): Task
     updateTask(input: UpdateTaskInput!): Task
     deleteTask(id: ID!): String
   }

@@ -3,31 +3,26 @@ import { gql } from '@apollo/client';
 export const createBoardMutation = gql`
   mutation CreateBoard($name: String!) {
     createBoard(input: { name: $name }) {
-      # data {
-      #   id
-      #   name
-      # }
-      # success 
       id
       name
     }
   }
 `;
 
-export const updateBoardMutation = gql`
-  mutation UpdateBoard($id: ID!, $name: String!) {
-    updateBoard(id: $id, name: $name) {
-      id
-      name
-    }
-  }
-`;
+// export const updateBoardMutation = gql`
+//   mutation UpdateBoard($id: ID!, $name: String!) {
+//     updateBoard(id: $id, name: $name) {
+//       id
+//       name
+//     }
+//   }
+// `;
 
-export const deleteBoardMutation = gql`
-  mutation DeleteBoard($id: ID!) {
-    deleteBoard(id: $id)
-  }
-`;
+// export const deleteBoardMutation = gql`
+//   mutation DeleteBoard($id: ID!) {
+//     deleteBoard(id: $id)
+//   }
+// `;
 
 export const createColumnMutation = gql`
   mutation CreateColumn($name: String!, $board_id: String!) {
@@ -40,11 +35,15 @@ export const createColumnMutation = gql`
 `;
 
 export const updateColumnMutation = gql`
-  mutation UpdateColumn($id: ID!, $name: String!, $board_id: ID!) {
-    updateColumn(input: { id: $id, name: $name, board_id: $board_id }) {
+  mutation UpdateColumn($input: UpdateColumnInput) {
+    updateColumn(input: $input) {
       id
       name
       board_id
+      tasks {
+        id
+        title
+      }
     }
   }
 `;
@@ -56,8 +55,8 @@ export const deleteColumnMutation = gql`
 `;
 
 export const createTaskMutation = gql`
-  mutation CreateTask($title: String!, $column_id: String!,  $board_id: String!) {
-    createTask(input: { title: $title, column_id: $column_id, board_id: $board_id }) {
+  mutation CreateTask($input: NewTaskInput) {
+    createTask(input: $input) {
       id
       title
       column_id

@@ -1,7 +1,7 @@
 
 export const dummyBoards = [
     {
-        "id": "1",
+        "id": "b1",
         "name": "Project Alpha",
         "description": "Initial project setup and planning",
         "columns": [
@@ -22,39 +22,6 @@ export const dummyBoards = [
                 "id": "c2",
                 "board_id": "1",
                 "name": "In Progress",
-                "position": 2,
-                "tasks": []
-            }
-        ]
-    },
-    {
-        "id": "2",
-        "name": "Marketing Campaign",
-        "columns": [
-            {
-                "id": "c3",
-                "board_id": "2",
-                "name": "Ideas",
-                "position": 1,
-                "tasks": [
-                    {
-                        "id": "t2",
-                        "column_id": "c3",
-                        "title": "Brainstorm campaign slogans",
-                    }
-                ]
-            },
-            {
-                "id": "c4",
-                "board_id": "2",
-                "name": "Execution",
-                "position": 2,
-                "tasks": []
-            },
-            {
-                "id": "c4",
-                "board_id": "2",
-                "name": "Execution",
                 "position": 2,
                 "tasks": []
             }

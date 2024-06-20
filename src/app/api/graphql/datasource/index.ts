@@ -1,5 +1,9 @@
+import fs from 'fs'
+import path from 'path'
 import { dummyBoards } from "./data";
 
+
+const dataPath = path.resolve(__dirname, 'data.json');
 
 export default class Kanban {
     private static instance: Kanban;
@@ -24,6 +28,20 @@ export default class Kanban {
         }
     }
 
+    // private async initData() {
+    //     try {
+    //         // This is saved in the .next folder due tot the build process, how to I make it read the relative path and generate one later
+    //         const data = fs.readFileSync(dataPath, 'utf8');
+    //         const parsedData = JSON.parse(data)
+    //         this.data = parsedData['boards'];
+    //     } catch (error) {
+    //         console.error(error
+
+    //         )
+    //         throw new Error("Failed to load initial data");
+    //     }
+    // }
+
     // Function to fetch all boards
     async getAllBoards() {
         return this.data;
@@ -31,10 +49,8 @@ export default class Kanban {
 
     async getBoardById(input: any) {
 
-        
-        const data = this.data.find(board => board.id === input.toString());
-        console.log('input>>>>>>>>>>>', input,this.data, data)
-        return data || {};
+        const selectedBoarData = this.data.find(board => board.id === input.toString());
+        return selectedBoarData || {};
     }
 
 
@@ -51,6 +67,7 @@ export default class Kanban {
             const newBoard = { ...input, id: (this.data.length + 1).toString(), columns: [] };
             this.data.push(newBoard);
             // TODO: add save data
+            // await this.saveData()
             return { newBoard };
         } catch (error) {
             throw new Error("Failed to create board");
@@ -70,6 +87,7 @@ export default class Kanban {
 
             // Simulate saving the data
             // await this.saveData();
+            await this.saveData()
 
             // Return the updated board
             return this.data.boards[index];
@@ -83,25 +101,39 @@ export default class Kanban {
             const { name, board_id } = input;
             const boardToUpdate = await this.getBoardById(board_id)
 
-            const columnPosition = boardToUpdate?.columns.length + 1
-            const newColumn = { name, id: `c${columnPosition}`, board_id, tasks: [] };
+
+            const newColumn = { name, id: `c${boardToUpdate?.columns.length + 1}`, board_id, tasks: [] };
+            boardToUpdate?.columns.push(newColumn)
+
+            console.log('boardToUpdate', boardToUpdate)
 
             // TODO: refactor to make use of this.saveData()
 
-            const updatedBoard = { ...boardToUpdate, columns: [...boardToUpdate?.columns, newColumn] };
             const updatedData = this.data.map((board: any) => {
-                if (board.id === updatedBoard.id) {
-                    return updatedBoard;
+                if (board.id === boardToUpdate.id) {
+                    return boardToUpdate;
                 }
                 return board;
             });
 
             //TODO:  below make use of saveData return
             this.data = updatedData;
+            // this.saveData()
             return newColumn;
         } catch (error) {
             throw new Error("Failed to create column");
         }
+    }
+
+    async getBoardColumns(board_id) {
+        const board = await this.getBoardById(board_id)
+        return board['columns'];
+    }
+
+    async getColumnByIdInABoard(board_id, column_id) {
+        const board = await this.getBoardById(board_id)
+        const column = board['columns'].find(column => column.id === column_id);
+        return column;
     }
 
     async deleteColumn(input: any) {
@@ -125,6 +157,39 @@ export default class Kanban {
     }
 
     // TODO: add update column function (update title and tasks clearing here)
+    async updateColumn(input: any) {
+        try {
+            const { board_id, column_id, columnUpdate, id } = input;
+            const boardToUpdate = await this.getBoardById(board_id)
+            const columns = await this.getBoardColumns(board_id);
+            let updatedColData
+            // update the specific column 
+            const updatedCols = columns?.map((column) => {
+                if (column.id === id) {
+                    updatedColData = { ...column, ...input }
+                    return updatedColData;
+                }
+                return column;
+            })
+
+            // console.log('updateCols>>>>', updatedCols)
+            // Replace below with the saveData(updatedBoard)
+            const updatedBoard = { ...boardToUpdate, columns: updatedCols };
+            const updatedData = this.data.map((board: any) => {
+                if (board.id === board_id) {
+                    return updatedBoard;
+                }
+                return board;
+            });
+
+            console.log('updatedData>>>>>>>', updatedData)
+            this.data = updatedData;
+            return updatedColData;
+        } catch (error) {
+            throw new Error("Failed to create column");
+        }
+    }
+
 
     async createTask(input: any) {
         try {
@@ -157,9 +222,17 @@ export default class Kanban {
 
     // TODO: update task, title and column id on DnD
 
-    async saveData () {
-        // save to json file 
-        // return the updated board 
-    }
+    // async saveData () {
+    //     // save to json file 
+    //     // return the updated board 
+    // }
 
+    async saveData() {
+        try {
+            fs.writeFileSync(dataPath, this.data);
+            // return this.data;
+        } catch (error) {
+            throw new Error("Failed to save data");
+        }
+    }
 }

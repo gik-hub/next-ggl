@@ -1,6 +1,4 @@
-// Queries for GraphQL client
-import { AnyCnameRecord } from 'dns';
-import gql from 'graphql-tag';
+import { gql } from "@apollo/client";
 
 
 export const getBoardsQuery = gql`
@@ -20,11 +18,9 @@ export const getBoardsQuery = gql`
   }
 `;
 
-export const getBoardByIdQuery = (board_id: any) => {
-
-  return gql`
-  query GetBoardByBoardId {
-    board(board_id: ${board_id}) {
+export const getBoardByIdQuery =  gql`
+  query GetBoardById($board_id: String!)  {
+    board(board_id: $board_id) {
       id
       name
       columns {
@@ -38,24 +34,6 @@ export const getBoardByIdQuery = (board_id: any) => {
     }
   }
 `
-};
-
-export const getColumnByBoardIdQuery = (board_id: any) => {
-
-  return gql`
-  query GetColumnByBoardId {
-    column(board_id: ${board_id}) {
-      id
-      name
-      board_id
-      tasks {
-        id
-        title
-      }
-    }
-  }
-`
-};
 
 export const getTasksByColumnIdQuery = (column_id: string) => gql`
   query GetTasksByColumnId {

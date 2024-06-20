@@ -33,6 +33,7 @@ export default function Home() {
   }, [data?.boards]);
 
   if (error) return <p>Error</p>;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <Stack

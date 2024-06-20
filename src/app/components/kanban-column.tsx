@@ -21,6 +21,7 @@ import { getBoardByIdQuery } from '../lib/graphql/query';
 import {
   createTaskMutation,
   deleteColumnMutation,
+  updateColumnMutation,
 } from '../lib/graphql/mutation';
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -32,8 +33,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function KanbanColumn({ board, column }) {
-  const { refetch } = useQuery(getBoardByIdQuery(board.id));
+  const { refetch } = useQuery(getBoardByIdQuery, {
+    variables: { board_id: board.id },
+  });
+
   const [deleteColumn, { data }] = useMutation(deleteColumnMutation);
+
+  const [updateColumn] = useMutation(updateColumnMutation);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -52,18 +58,36 @@ export default function KanbanColumn({ board, column }) {
     refetch();
   };
 
-  const [createTask, { data: createdColumn }] = useMutation(createTaskMutation);
+  const [createTask, { data: createdTask }] = useMutation(createTaskMutation);
+
+  const handleUpdateColumn = async (input: any) => {
+    console.log('column to update', column);
+    await updateColumn({
+      variables: {
+        input: {
+          id: column?.id,
+          board_id: board?.id,
+          name: 'new name',
+          // tasks: []
+        },
+      },
+    });
+    handleClose()
+    refetch();
+  };
 
   const handleCreateTask = async (input: any) => {
     await createTask({
       variables: {
-        board_id: board?.id,
-        column_id: column?.id,
-        title: input?.name,
+        input: {
+          id: column?.id,
+          board_id: board?.id,
+          title: input?.name,
+        },
       },
     });
-    refetch();
-  };
+
+  }
 
   const { isOver, setNodeRef } = useDroppable({
     id: 'droppable',
@@ -94,7 +118,7 @@ export default function KanbanColumn({ board, column }) {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleClose}>Rename</MenuItem>
+          <MenuItem onClick={handleUpdateColumn}>Rename</MenuItem>
           <MenuItem onClick={handleClose}>Clear</MenuItem>
           <MenuItem onClick={handleDeleteColumn}>Delete</MenuItem>
         </Menu>
@@ -119,7 +143,6 @@ export default function KanbanColumn({ board, column }) {
       </Stack>
       <Divider />
       <AddComponent btnLabel={'Add Card'} onAdd={handleCreateTask} />
-      {/* <Button>Add card</Button> */}
     </Stack>
   );
 }
