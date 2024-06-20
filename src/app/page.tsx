@@ -1,10 +1,9 @@
 'use client';
 
-import { AddCircle, CheckCircle, Dangerous } from '@mui/icons-material';
+import { AddCircle } from '@mui/icons-material';
 import {
   Box,
   Button,
-  IconButton,
   Paper,
   Stack,
   TextField,
@@ -12,12 +11,8 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import styles from './page.module.scss';
 import { getBoardsQuery } from './lib/graphql/query';
-import {
-  createBoardMutation,
-  updateBoardMutation,
-} from './lib/graphql/mutation';
+import { createBoardMutation } from './lib/graphql/mutation';
 import BoardColumns from './components/BoardColumns';
 
 export default function Home() {
@@ -27,7 +22,6 @@ export default function Home() {
 
   const [createBoard, { data: createdBoard }] =
     useMutation(createBoardMutation);
-
 
   const handleCreateBoard = () => {
     createBoard({ variables: { name: title } });
@@ -41,10 +35,26 @@ export default function Home() {
   if (error) return <p>Error</p>;
 
   return (
-    <div className={styles.container}>
-      <Paper className={styles.left}>
+    <Stack
+      direction={'row'}
+      width={'100vw'}
+      height={'100vh'}
+      bgcolor={'rgb(243, 245, 255)'}
+      display={'flex'}
+      spacing={2}
+      p={2}
+    >
+      <Paper
+        sx={{
+          display: 'flex',
+          gap: '16px',
+          flexDirection: 'column',
+          alignItems: 'center',
+          width: '20%',
+        }}
+      >
         <Box width={'100%'}>
-          <Stack spacing={4} width={'100%'}>
+          <Stack spacing={2} width={'100%'} p={1}>
             {data?.boards?.map((board) => (
               <Typography
                 sx={{
@@ -72,7 +82,7 @@ export default function Home() {
           label={'Title'}
           fullWidth
         />
-        <div>
+        <Box p={1}>
           <Button
             variant='contained'
             startIcon={<AddCircle />}
@@ -80,12 +90,17 @@ export default function Home() {
           >
             Add
           </Button>
-        </div>
+        </Box>
       </Paper>
-      <Paper className={styles.right}>
+      <Paper
+        sx={{
+          flex: 1,
+          padding: 2,
+        }}
+      >
         <Typography variant='h5'>{activeBoard?.name || ''}</Typography>
         <BoardColumns board={activeBoard} />
       </Paper>
-    </div>
+    </Stack>
   );
 }
