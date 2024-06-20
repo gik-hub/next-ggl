@@ -40,7 +40,7 @@ const resolvers = {
 
         updateColumn: (_, { input }) => {
             // Return an updated column based on input
-            // TODO: Update column in jSON
+            // TODO: DONE Update column in jSON
             return kanban.updateColumn(input)
             // return { id: input.id, name: input.name || "Default Column Name", board_id: input.board_id, tasks: input.tasks || [] };
         },
@@ -50,7 +50,7 @@ const resolvers = {
         },
         createTask: (_, { input }) => {
             // Return a new task based on input
-            // TODO : 
+            // TODO : DONE
             return kanban.createTask(input);
         }
     }

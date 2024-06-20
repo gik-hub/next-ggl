@@ -80,7 +80,7 @@ export default function KanbanColumn({ board, column }) {
     await createTask({
       variables: {
         input: {
-          id: column?.id,
+          column_id: column?.id,
           board_id: board?.id,
           title: input?.name,
         },
