@@ -5,6 +5,7 @@ import { useDroppable } from '@dnd-kit/core';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import {
   Button,
   Divider,
@@ -72,7 +73,7 @@ export default function KanbanColumn({ board, column }) {
         },
       },
     });
-    handleClose()
+    handleClose();
     refetch();
   };
 
@@ -86,8 +87,7 @@ export default function KanbanColumn({ board, column }) {
         },
       },
     });
-
-  }
+  };
 
   const { isOver, setNodeRef } = useDroppable({
     id: 'droppable',
@@ -124,23 +124,37 @@ export default function KanbanColumn({ board, column }) {
         </Menu>
       </Stack>
       <Divider />
-      <Stack
-        maxHeight={'70vh'}
-        minHeight={'30vh'}
-        overflow={'scroll'}
-        spacing={2}
-        p={2}
-        // ref={setNodeRef}
-        // style={style}
-      >
-        {column?.tasks?.map((task) => (
-          <>
-            <TaskCard task={task}>
-              <Typography key={task}>{task?.title}</Typography>
-            </TaskCard>
-          </>
-        ))}
-      </Stack>
+      <Droppable droppableId='tasks'>
+        {(provided) => (
+          <Stack
+            maxHeight={'70vh'}
+            minHeight={'30vh'}
+            overflow={'scroll'}
+            spacing={2}
+            p={2}
+            // ref={setNodeRef}
+            // style={style}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {column?.tasks?.map((task, index) => (
+              <Draggable key={task} draggableId={task?.id} index={index}>
+                {(provided) => (
+                  <TaskCard
+                    task={task}
+                    ref={provided.innerRef}
+                    {...provided.dragHandlerProps}
+                    {...provided.draggableProps}
+                  >
+                    <Typography>{task?.title}</Typography>
+                  </TaskCard>
+                )}
+                {provided.placeholder}
+              </Draggable>
+            ))}
+          </Stack>
+        )}
+      </Droppable>
       <Divider />
       <AddComponent btnLabel={'Add Card'} onAdd={handleCreateTask} />
     </Stack>
